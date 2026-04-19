@@ -52,7 +52,7 @@ Juego de disparos al blanco donde un soldado debe destruir dianas móviles. El p
 
 ---
 
-## Clase 12 — Aesthetics Lvl 2: Animaciones y Movimiento
+## 🎬 Clase 12 — Aesthetics Lvl 2: Animaciones y Movimiento
 
 ### AnimatorController — Soldado
 - **Estados:** Idle, Run, Shoot
