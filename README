@@ -1,46 +1,115 @@
-Basic Projectile - Clase 5: Game Logic
-
-Alumno: Federico Bazán
-
----
-
-DESCRIPCIÓN
-Juego de disparos al blanco donde un soldado debe destruir dianas giratorias.
+# 🎯 Basic Projectile
+**Alumno:** Federico Bazán
+**Curso:** Diplomatura Universitaria en Desarrollo de Videojuegos — UNC & Docta Visual Arts
+**Clases:** 5 (Game Logic) + 12 (Aesthetics Lvl 2: Animaciones y Movimiento)
 
 ---
 
-CONTROLES
-- A: Rotar soldado a la izquierda
-- D: Rotar soldado a la derecha
-- BARRA ESPACIADORA: Disparar
+## 📖 Descripción
+
+Juego de disparos al blanco donde un soldado debe destruir dianas móviles. El proyecto evolucionó desde sus mecánicas base de Clase 5 incorporando animaciones, un AnimatorController, una cinemática de intro con Timeline y mejoras visuales de iluminación y skybox.
 
 ---
 
-CONSIGNAS
+## 🎮 Controles
 
-Ejercicio 1: Script con Mensajes de Unity
-- Script: TestMensajesUnity.cs
-- Función: Muestra en Console todos los mensajes del ciclo de vida de Unity
-- Cómo probar: Revisar los mensajes x consola
+| Tecla | Acción |
+|-------|--------|
+| `A` | Rotar soldado a la izquierda |
+| `D` | Rotar soldado a la derecha |
+| `Espacio` | Disparar |
 
-Ejercicio 2: Variable Flotante que Disminuye
-- Script: TemporizadorVida.cs
-- Función: Representa tiempo de vida, duración, energía que disminuye hasta destruirse.
-- Cómo probar: Activar la esfera, se destruye en 5 segundos. Los proyectiles se destruyen a los 3 segundos.
+---
 
-Ejercicio 3: Movimiento con Translate()
-- Script: MoverAdelante.cs
-- Función: Usa `transform.Translate(Vector3.forward)` para mover objetos
-- Cómo probar: Activar el cubo, se mueve hacia adelante. Movimiento de las Dianas
+## 📚 Clase 5 — Game Logic
 
-Ejercicio 4: Proyectil con Colisión
-- Script: Proyectil.cs
-- Función: Detecta colisión con `OnCollisionEnter()` y destruye objetivos con tag "Objetivo"
-- Combina: Ejercicios 2 (tiempo de vida) + 3 (movimiento) + 4 (colisión)
+### Ejercicio 1: Script con Mensajes de Unity
+- **Script:** `TestMensajesUnity.cs`
+- **Función:** Muestra en Console todos los mensajes del ciclo de vida de Unity (Awake, Start, Update, OnDestroy, etc.)
+- **Cómo probar:** Revisar los mensajes en la ventana Console al dar Play
 
-Ejercicio 5: "Alguna mecánica de juego"
-- Soldado jugador con modelo 3D y animaciones (idle + disparo)
-- Sistema de disparo
-- Dianas giratorias como objetivos
-- Tags para destrucción selectiva
+### Ejercicio 2: Variable Flotante que Disminuye
+- **Script:** `TemporizadorVida.cs`
+- **Función:** Representa tiempo de vida/energía que disminuye con `Time.deltaTime` hasta destruir el objeto
+- **Cómo probar:** Activar la esfera en Hierarchy — se destruye en 5 segundos. Los proyectiles se autodestruyen a los 3 segundos
+
+### Ejercicio 3: Movimiento con Translate()
+- **Script:** `MoverAdelante.cs`
+- **Función:** Mueve objetos usando `transform.Translate(Vector3.forward)`
+- **Cómo probar:** Activar el cubo en Hierarchy — se mueve hacia adelante. También controla el movimiento de las dianas
+
+### Ejercicio 4: Proyectil con Colisión
+- **Script:** `Proyectil.cs`
+- **Función:** Detecta colisión con `OnCollisionEnter()` y destruye objetivos con tag "Objetivo"
+- **Combina:** Ejercicio 2 (tiempo de vida) + Ejercicio 3 (movimiento) + colisión con tags
+
+### Ejercicio 5: Mecánica de Juego Completa
+- Soldado jugador con modelo 3D (Toon Soldiers WW2 Demo)
+- Sistema de disparo con cooldown
+- Dianas móviles como objetivos
+- Destrucción selectiva por tags
 - Paredes que no se destruyen
+
+---
+
+## Clase 12 — Aesthetics Lvl 2: Animaciones y Movimiento
+
+### AnimatorController — Soldado
+- **Estados:** Idle, Run, Shoot
+- **Parámetros:** `isRunning` (Bool), trigger de disparo
+- **Clips usados:** `infantry_combat_idle`, `infantry_combat_run`, `infantry_combat_shoot` (Toon Soldiers WW2 Demo)
+
+### Animation — Puerta
+- **Objeto animado:** Bisagra (padre de Puerta1, dentro de Entrada1)
+- **Clip:** `PuertaAbre` — rotación en Y de 0° a -120° en 60 frames
+- **Loop Time:** desactivado
+- **Estructura:** `Entrada1 → Bisagra → Puerta1` para rotación correcta desde el borde
+
+### Timeline — Cinemática de Intro
+Secuencia de aproximadamente 3 segundos antes de que empiece el juego:
+
+| Frame | Evento |
+|-------|--------|
+| 0 | Puerta se abre, soldado empieza a correr desde afuera |
+| 0–180 | Soldado corre desde Z=-23 hasta su posición de juego |
+| 160 | Corte de cámara cinematográfica a cámara de juego |
+| 180 | Soldado queda en idle, dianas aparecen |
+
+- **Tracks usadas:** Animation Track (soldado), Animation Track (bisagra), Activation Track (ObjetivosMoviles), Activation Track x2 (cámaras)
+- **Dos cámaras:** CamaraCinematica (fija, cinematográfica) + Main Camera (juego) — swap con Activation Tracks
+
+### Animation + AnimatorController — Dianas
+- **Clip:** `DianaGolpeada` — scale punch de 1 → 1.4 → 1 en 12 frames
+- **Estados:** Idle (vacío) → DianaGolpeada (trigger "Golpeada")
+- **Script:** `ObjetivoAnimado.cs` — maneja el trigger y destruye el objeto tras 0.5 segundos
+- **Integración:** `Proyectil.cs` llama a `obj.Golpear()` en lugar de destruir directamente
+
+### Mejoras Visuales
+- **Skybox:** Customizable Skybox — Sunset1 (atardecer rojizo)
+- **Iluminación:** Directional Light color #FFB347, Intensity 1.2, Rotation (50, -30, 0)
+- **PuntoDisparo:** reubicado como hijo de `Bip001 R Hand` para seguir la punta del arma correctamente
+
+---
+
+## Scripts
+
+| Script | Descripción |
+|--------|-------------|
+| `Proyectil.cs` | Movimiento, tiempo de vida, colisión y llamada a ObjetivoAnimado |
+| `Disparador.cs` | Instancia proyectiles desde PuntoDisparo con cooldown |
+| `JugadorRotar.cs` | Rotación del soldado con A/D |
+| `AnimacionDisparoSimple.cs` | Dispara el trigger de animación de shoot |
+| `ObjetivoAnimado.cs` | Maneja animación de impacto y destrucción con delay |
+| `TemporizadorVida.cs` | Variable de vida que disminuye hasta destruir el objeto |
+| `MoverAdelante.cs` | Movimiento con Translate() |
+| `TestMensajesUnity.cs` | Log de mensajes del ciclo de vida de Unity |
+
+---
+
+## Assets Externos
+
+- **Toon Soldiers WW2 Demo** — modelo de soldado con animaciones
+- **Stylized Hand Painted Dungeon** — texturas de paredes y piso
+- **Customizable Skybox** — material Sunset1
+
+---
