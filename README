@@ -1,13 +1,13 @@
 # 🎯 Basic Projectile
 **Alumno:** Federico Bazán
 **Curso:** Diplomatura Universitaria en Desarrollo de Videojuegos — UNC & Docta Visual Arts
-**Clases:** 5 (Game Logic) + 12 (Aesthetics Lvl 2: Animaciones y Movimiento)
+**Clases:** 5 (Game Logic) + 12 (Aesthetics Lvl 2: Animaciones y Movimiento)  + 13 (Elementos básicos de la Interfaz de Usuario)
 
 ---
 
 ## 📖 Descripción
 
-Juego de disparos al blanco donde un soldado debe destruir dianas móviles. El proyecto evolucionó desde sus mecánicas base de Clase 5 incorporando animaciones, un AnimatorController, una cinemática de intro con Timeline y mejoras visuales de iluminación y skybox.
+Juego de disparos al blanco donde un soldado dispara a dianas móviles. El proyecto evolucionó desde sus mecánicas base de Clase 5 incorporando animaciones, un AnimatorController, una cinemática de intro con Timeline y mejoras visuales de iluminación y skybox. En la clase 13 le agregamos patrón Singleton, un nivel extra, transiciones entre escenas, y elementos de UI.
 
 ---
 
@@ -103,6 +103,41 @@ Secuencia de aproximadamente 3 segundos antes de que empiece el juego:
 | `TemporizadorVida.cs` | Variable de vida que disminuye hasta destruir el objeto |
 | `MoverAdelante.cs` | Movimiento con Translate() |
 | `TestMensajesUnity.cs` | Log de mensajes del ciclo de vida de Unity |
+
+---
+
+## 🖥️ Clase 13 — UI
+
+**Escenas:** Menu0 (0), Nivel1 (1), Nivel2 (2)
+
+**Main Menu:** botón JUGAR con fade, MainMenuManager.cs
+
+**Fade:** FadeManager Singleton con DontDestroyOnLoad, imagen negra que anima alpha via OnSceneLoaded
+
+**HUD:** TextoBalas (top-left) y TextoScore (top-right), actualizados en tiempo real
+
+**Resultados:** Game Over con REINICIAR, Victoria con MENÚ PRINCIPAL
+
+**Singleton ShootingGalleryManager:** persiste entre escenas, maneja balas/score/dianas/niveles
+
+---
+
+## 🗂️ Scripts Actualizados
+
+| Script | Carpeta | Descripción |
+|--------|---------|-------------|
+| ShootingGalleryManager.cs | Managers | Singleton central del juego |
+| FadeManager.cs | UI | Fade in/out entre escenas |
+| HUDManager.cs | UI | Textos y paneles de resultado |
+| MainMenuManager.cs | UI | Navegación del menú |
+| Disparador.cs | Jugador | Instancia proyectiles con cooldown |
+| JugadorRotar.cs | Jugador | Rotación con A/D |
+| AnimacionDisparoSimple.cs | Jugador | Trigger de animación de disparo |
+| ObjetivoAnimado.cs | Objetivos | Animación de impacto y destrucción |
+| MoverAdelante.cs | Objetivos | Movimiento de dianas |
+| Proyectil.cs | Herramientas | Movimiento, vida y colisión |
+| TemporizadorVida.cs | Herramientas | Vida que disminuye |
+| TestMensajesUnity.cs | Herramientas | Ciclo de vida de Unity |
 
 ---
 
