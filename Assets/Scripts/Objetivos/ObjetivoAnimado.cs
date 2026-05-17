@@ -15,6 +15,7 @@ public class ObjetivoAnimado : MonoBehaviour
     {
         if (yaGolpeada) return;
         yaGolpeada = true;
+        AudioManager.Instance.PlayImpacto();
         if (anim != null)
         {
             anim.SetTrigger("Golpeada");

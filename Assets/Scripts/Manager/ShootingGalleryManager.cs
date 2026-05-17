@@ -109,6 +109,7 @@ public class ShootingGalleryManager : MonoBehaviour
         }
         else
         {
+            AudioManager.Instance.PlayVictoria();
             if (HUDManager.instance != null)
                 HUDManager.instance.MostrarVictoria(score);
         }
@@ -130,6 +131,7 @@ public class ShootingGalleryManager : MonoBehaviour
     {
         if (victoriaEjecutada) return;
         juegoActivo = false;
+        AudioManager.Instance.PlayGameOver();
         foreach (GameObject proyectil in GameObject.FindGameObjectsWithTag("Proyectil"))
             Destroy(proyectil);
         if (HUDManager.instance != null)

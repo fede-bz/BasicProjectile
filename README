@@ -1,13 +1,13 @@
 # 🎯 Basic Projectile
 **Alumno:** Federico Bazán
 **Curso:** Diplomatura Universitaria en Desarrollo de Videojuegos — UNC & Docta Visual Arts
-**Clases:** 5 (Game Logic) + 12 (Aesthetics Lvl 2: Animaciones y Movimiento)  + 13 (Elementos básicos de la Interfaz de Usuario)
+**Clases:** 5 (Game Logic) + 12 (Aesthetics Lvl 2: Animaciones y Movimiento) + 13 (Elementos básicos de la Interfaz de Usuario) + 16 (Aesthetics Lvl 3: Audio)
 
 ---
 
 ## 📖 Descripción
 
-Juego de disparos al blanco donde un soldado dispara a dianas móviles. El proyecto evolucionó desde sus mecánicas base de Clase 5 incorporando animaciones, un AnimatorController, una cinemática de intro con Timeline y mejoras visuales de iluminación y skybox. En la clase 13 le agregamos patrón Singleton, un nivel extra, transiciones entre escenas, y elementos de UI.
+Juego de disparos al blanco donde un soldado dispara a dianas móviles. El proyecto evolucionó desde sus mecánicas base de Clase 5 incorporando animaciones, un AnimatorController, una cinemática de intro con Timeline y mejoras visuales de iluminación y skybox. En la clase 13 le agregamos patrón Singleton, un nivel extra, transiciones entre escenas, y elementos de UI. En la clase 16 se incorporó un sistema de audio completo con música de fondo, efectos de sonido y audio en Timeline.
 
 ---
 
@@ -75,7 +75,7 @@ Secuencia de aproximadamente 3 segundos antes de que empiece el juego:
 | 160 | Corte de cámara cinematográfica a cámara de juego |
 | 180 | Soldado queda en idle, dianas aparecen |
 
-- **Tracks usadas:** Animation Track (soldado), Animation Track (bisagra), Activation Track (ObjetivosMoviles), Activation Track x2 (cámaras)
+- **Tracks usadas:** Animation Track (soldado), Animation Track (bisagra), Activation Track (ObjetivosMoviles), Activation Track x2 (cámaras), Audio Track (pasos del soldado), Audio Track (puerta)
 - **Dos cámaras:** CamaraCinematica (fija, cinematográfica) + Main Camera (juego) — swap con Activation Tracks
 
 ### Animation + AnimatorController — Dianas
@@ -88,21 +88,6 @@ Secuencia de aproximadamente 3 segundos antes de que empiece el juego:
 - **Skybox:** Customizable Skybox — Sunset1 (atardecer rojizo)
 - **Iluminación:** Directional Light color #FFB347, Intensity 1.2, Rotation (50, -30, 0)
 - **PuntoDisparo:** reubicado como hijo de `Bip001 R Hand` para seguir la punta del arma correctamente
-
----
-
-## Scripts
-
-| Script | Descripción |
-|--------|-------------|
-| `Proyectil.cs` | Movimiento, tiempo de vida, colisión y llamada a ObjetivoAnimado |
-| `Disparador.cs` | Instancia proyectiles desde PuntoDisparo con cooldown |
-| `JugadorRotar.cs` | Rotación del soldado con A/D |
-| `AnimacionDisparoSimple.cs` | Dispara el trigger de animación de shoot |
-| `ObjetivoAnimado.cs` | Maneja animación de impacto y destrucción con delay |
-| `TemporizadorVida.cs` | Variable de vida que disminuye hasta destruir el objeto |
-| `MoverAdelante.cs` | Movimiento con Translate() |
-| `TestMensajesUnity.cs` | Log de mensajes del ciclo de vida de Unity |
 
 ---
 
@@ -122,22 +107,37 @@ Secuencia de aproximadamente 3 segundos antes de que empiece el juego:
 
 ---
 
-## 🗂️ Scripts Actualizados
+## 🔊 Clase 16 — Audio
+
+**AudioManager Singleton** con DontDestroyOnLoad que persiste entre escenas, inicializado en Menu0.
+
+- "background": Música de fondo en loop, arranca en Menu0 y persiste entre escenas.
+- "shot-1 y shot-2": Disparo del soldado, alternados entre sí.
+- "target-impact": Impacto en diana al ser golpeada.
+- "win-game": Victoria al completar Nivel2.
+- "game-over": Game Over al quedarse sin balas.
+- "Audio Track Timeline": Pasos del soldado corriendo durante la cinemática de intro.
+- "Audio Track Timeline": Sonido de puerta abriéndose durante la cinemática de intro.
+
+---
+
+## Scripts
 
 | Script | Carpeta | Descripción |
-|--------|---------|-------------|
-| ShootingGalleryManager.cs | Managers | Singleton central del juego |
-| FadeManager.cs | UI | Fade in/out entre escenas |
-| HUDManager.cs | UI | Textos y paneles de resultado |
-| MainMenuManager.cs | UI | Navegación del menú |
-| Disparador.cs | Jugador | Instancia proyectiles con cooldown |
-| JugadorRotar.cs | Jugador | Rotación con A/D |
-| AnimacionDisparoSimple.cs | Jugador | Trigger de animación de disparo |
-| ObjetivoAnimado.cs | Objetivos | Animación de impacto y destrucción |
-| MoverAdelante.cs | Objetivos | Movimiento de dianas |
-| Proyectil.cs | Herramientas | Movimiento, vida y colisión |
-| TemporizadorVida.cs | Herramientas | Vida que disminuye |
-| TestMensajesUnity.cs | Herramientas | Ciclo de vida de Unity |
+
+- "ShootingGalleryManager.cs": Managers - Singleton central del juego
+- "AudioManager.cs": Managers - Singleton de audio, persiste entre escenas
+- "FadeManager.cs": UI - Fade in/out entre escenas
+- "HUDManager.cs": UI - Textos y paneles de resultado
+- "MainMenuManager.cs": UI - Navegación del menú
+- "Disparador.cs": Jugador - Instancia proyectiles con cooldown
+- "JugadorRotar.cs": Jugador - Rotación con A/D
+- "AnimacionDisparoSimple.cs": Jugador - Trigger de animación de disparo
+- "ObjetivoAnimado.cs": Objetivos - Animación de impacto y destrucción
+- "MoverAdelante.cs": Objetivos - Movimiento de dianas
+- "Proyectil.cs": Herramientas - Movimiento, vida y colisión
+- "TemporizadorVida.cs": Herramientas - Vida que disminuye
+- "TestMensajesUnity.cs": Herramientas - Ciclo de vida de Unity
 
 ---
 

@@ -27,5 +27,6 @@ public class Disparador : MonoBehaviour
             return;
         }
         Instantiate(prefabProyectil, puntoDisparo.position, puntoDisparo.rotation);
+        AudioManager.Instance.PlayDisparo();
     }
 }
