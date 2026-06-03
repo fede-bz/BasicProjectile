@@ -56,4 +56,13 @@ public class HUDManager : MonoBehaviour
         StartCoroutine(FadeManager.instance.FadeOut(() =>
             UnityEngine.SceneManagement.SceneManager.LoadScene("Menu0")));
     }
+
+    public void Salir()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+    }
 }
