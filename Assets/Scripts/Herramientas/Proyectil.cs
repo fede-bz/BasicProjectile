@@ -1,8 +1,10 @@
 using UnityEngine;
+
 public class Proyectil : MonoBehaviour
 {
     public float tiempoDeVida = 1f;
     public float velocidad = 10f;
+    [SerializeField] GameObject impactoPS;
 
     void Update()
     {
@@ -14,6 +16,9 @@ public class Proyectil : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        if (impactoPS != null)
+            Instantiate(impactoPS, transform.position, Quaternion.identity);
+
         if (collision.gameObject.CompareTag("Objetivo"))
         {
             if (!ShootingGalleryManager.instance.juegoActivo) return;
