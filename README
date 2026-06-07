@@ -1,27 +1,26 @@
-# 🎯 Basic Projectile
+# Basic Projectile
 **Alumno:** Federico Bazán
-**Curso:** Diplomatura Universitaria en Desarrollo de Videojuegos — UNC & Docta Visual Arts
-**Clases:** 5 (Game Logic) + 12 (Aesthetics Lvl 2: Animaciones y Movimiento) + 13 (Elementos básicos de la Interfaz de Usuario) + 16 (Aesthetics Lvl 3: Audio)
+**Clases:** 5 (Game Logic) + 12 (Aesthetics Lvl 2: Animaciones y Movimiento) + 13 (Elementos básicos de la Interfaz de Usuario) + 16 (Aesthetics Lvl 3: Audio) + 21 (Aesthetics Lvl 4: Post-Processing y Efectos) + 22 (Save System y ScriptableObjects)
 
 ---
 
-## 📖 Descripción
+## Descripción
 
-Juego de disparos al blanco donde un soldado dispara a dianas móviles. El proyecto evolucionó desde sus mecánicas base de Clase 5 incorporando animaciones, un AnimatorController, una cinemática de intro con Timeline y mejoras visuales de iluminación y skybox. En la clase 13 le agregamos patrón Singleton, un nivel extra, transiciones entre escenas, y elementos de UI. En la clase 16 se incorporó un sistema de audio completo con música de fondo, efectos de sonido y audio en Timeline.
-
----
-
-## 🎮 Controles
-
-| Tecla | Acción |
-|-------|--------|
-| `A` | Rotar soldado a la izquierda |
-| `D` | Rotar soldado a la derecha |
-| `Espacio` | Disparar |
+Juego de disparos al blanco donde un soldado dispara a dianas móviles. El proyecto evolucionó desde sus mecánicas base de Clase 5 incorporando animaciones, un AnimatorController, una cinemática de intro con Timeline y mejoras visuales de iluminación y skybox. En la clase 13 le agregué patrón Singleton, un nivel extra, transiciones entre escenas, y elementos de UI. En la clase 16 se incorporó un sistema de audio completo. En la clase 21 se agregaron efectos visuales de post-procesado, Particle System y Trail Renderer. En la clase 22 se implementó un sistema de guardado y carga de datos con JSON y un Pause Menu, además de ScriptableObjects para los perfiles de diana.
 
 ---
 
-## 📚 Clase 5 — Game Logic
+## Controles
+
+
+`A` - otar soldado a la izquierda
+`D` - Rotar soldado a la derecha
+`Espacio` - Disparar
+`Escape` - Abrir/cerrar menú de pausa
+
+---
+
+## Clase 5 — Game Logic
 
 ### Ejercicio 1: Script con Mensajes de Unity
 - **Script:** `TestMensajesUnity.cs`
@@ -52,7 +51,7 @@ Juego de disparos al blanco donde un soldado dispara a dianas móviles. El proye
 
 ---
 
-## 🎬 Clase 12 — Aesthetics Lvl 2: Animaciones y Movimiento
+## Clase 12 — Aesthetics Lvl 2: Animaciones y Movimiento
 
 ### AnimatorController — Soldado
 - **Estados:** Idle, Run, Shoot
@@ -91,7 +90,7 @@ Secuencia de aproximadamente 3 segundos antes de que empiece el juego:
 
 ---
 
-## 🖥️ Clase 13 — UI
+## Clase 13 — UI
 
 **Escenas:** Menu0 (0), Nivel1 (1), Nivel2 (2)
 
@@ -107,37 +106,81 @@ Secuencia de aproximadamente 3 segundos antes de que empiece el juego:
 
 ---
 
-## 🔊 Clase 16 — Audio
+## Clase 16 — Audio
 
 **AudioManager Singleton** con DontDestroyOnLoad que persiste entre escenas, inicializado en Menu0.
 
-- "background": Música de fondo en loop, arranca en Menu0 y persiste entre escenas.
-- "shot-1 y shot-2": Disparo del soldado, alternados entre sí.
-- "target-impact": Impacto en diana al ser golpeada.
-- "win-game": Victoria al completar Nivel2.
-- "game-over": Game Over al quedarse sin balas.
-- "Audio Track Timeline": Pasos del soldado corriendo durante la cinemática de intro.
-- "Audio Track Timeline": Sonido de puerta abriéndose durante la cinemática de intro.
+- `background`: Música de fondo en loop, arranca en Menu0 y persiste entre escenas
+- `shot-1 y shot-2`: Disparo del soldado, alternados entre sí
+- `target-impact`: Impacto en diana al ser golpeada
+- `win-game`: Victoria al completar Nivel2
+- `game-over`: Game Over al quedarse sin balas
+- `Audio Track Timeline`: Pasos del soldado corriendo durante la cinemática de intro
+- `Audio Track Timeline`: Sonido de puerta abriéndose durante la cinemática de intro
 
+---
+
+## Clase 21 — Aesthetics Lvl 4: Post-Processing y Efectos
+
+### Post-Processing
+**Post-process Volume** global configurado en ambos niveles con los siguientes efectos:
+- `Bloom` — halos de luz en zonas brillantes al disparar
+- `Color Grading` — paleta de color general de la escena
+- `Vignette` — bordes oscuros para encuadre cinematográfico
+
+### Particle System — Efecto de Impacto en Diana
+- Prefab instanciado en la posición de la diana al ser golpeada
+- Llamado desde `ObjetivoAnimado.cs` al ejecutar `Golpear()`
+- `PlayOnAwake` activado, `StopAction → Destroy` para limpieza automática
+
+### Trail Renderer — Estela del Proyectil
+- Agregado al prefab `Proyectil`
+- Deja una estela visual mientras el proyectil viaja hacia las dianas
+- `Time`, `Width` y gradiente de color configurados para fade natural
+
+---
+
+## Clase 22 — Save System y ScriptableObjects
+
+### ScriptableObject — DianaData
+Perfil de datos para cada tipo de diana, creado como asset reutilizable en el proyecto.
+- **Campos:** `nombreDiana`, `descripcion`, `puntaje`, `velocidad`, `vidas`, `colorDiana`
+- **Assets creados:** `DianaLenta` (100pts, v1.5), `DianaRapida` (250pts, v4), `DianaDorada` (500pts, v6)
+- `ObjetivoAnimado.cs` lee velocidad, puntaje y color del SO al iniciar
+- Cada diana crea una instancia propia de material para que el color no afecte a las demás
+
+### SaveManager
+- **Script:** `SaveManager.cs` — Singleton con DontDestroyOnLoad
+- Guarda y carga datos con `JsonUtility` en `Application.persistentDataPath/guardado.json`
+- **Datos guardados:** score, balas restantes, dianas restantes, nivel actual
+- `HayGuardado()` para verificar si existe un archivo de guardado
+
+### Pause Menu
+- **Script:** `PauseMenuManager.cs` — detecta `Escape` para pausar/reanudar con `Time.timeScale`
+- **Prefab:** `PanelPausa` — reutilizado en Nivel1 y Nivel2
+- **Botones:** Guardar, Cargar, Salir
+- Al cargar: omite la cinemática de intro, reposiciona al soldado y ajusta la cantidad de dianas en escena
 ---
 
 ## Scripts
 
 | Script | Carpeta | Descripción |
-
-- "ShootingGalleryManager.cs": Managers - Singleton central del juego
-- "AudioManager.cs": Managers - Singleton de audio, persiste entre escenas
-- "FadeManager.cs": UI - Fade in/out entre escenas
-- "HUDManager.cs": UI - Textos y paneles de resultado
-- "MainMenuManager.cs": UI - Navegación del menú
-- "Disparador.cs": Jugador - Instancia proyectiles con cooldown
-- "JugadorRotar.cs": Jugador - Rotación con A/D
-- "AnimacionDisparoSimple.cs": Jugador - Trigger de animación de disparo
-- "ObjetivoAnimado.cs": Objetivos - Animación de impacto y destrucción
-- "MoverAdelante.cs": Objetivos - Movimiento de dianas
-- "Proyectil.cs": Herramientas - Movimiento, vida y colisión
-- "TemporizadorVida.cs": Herramientas - Vida que disminuye
-- "TestMensajesUnity.cs": Herramientas - Ciclo de vida de Unity
+|--------|---------|-------------|
+| `ShootingGalleryManager.cs` | Managers | Singleton central del juego |
+| `AudioManager.cs` | Managers | Singleton de audio, persiste entre escenas |
+| `SaveManager.cs` | Managers | Singleton de guardado/carga con JSON |
+| `FadeManager.cs` | UI | Fade in/out entre escenas |
+| `HUDManager.cs` | UI | Textos y paneles de resultado |
+| `MainMenuManager.cs` | UI | Navegación del menú |
+| `PauseMenuManager.cs` | UI | Pause Menu con Escape, botones Guardar/Cargar/Salir |
+| `Disparador.cs` | Jugador | Instancia proyectiles con cooldown |
+| `JugadorRotar.cs` | Jugador | Rotación con A/D |
+| `AnimacionDisparoSimple.cs` | Jugador | Trigger de animación de disparo |
+| `ObjetivoAnimado.cs` | Objetivos | Animación de impacto, destrucción y lectura de DianaData |
+| `MoverAdelante.cs` | Objetivos | Movimiento de dianas, velocidad seteada por DianaData |
+| `Proyectil.cs` | Herramientas | Movimiento, vida y colisión |
+| `TemporizadorVida.cs` | Herramientas | Vida que disminuye |
+| `TestMensajesUnity.cs` | Herramientas | Ciclo de vida de Unity |
 
 ---
 
@@ -146,5 +189,3 @@ Secuencia de aproximadamente 3 segundos antes de que empiece el juego:
 - **Toon Soldiers WW2 Demo** — modelo de soldado con animaciones
 - **Stylized Hand Painted Dungeon** — texturas de paredes y piso
 - **Customizable Skybox** — material Sunset1
-
----

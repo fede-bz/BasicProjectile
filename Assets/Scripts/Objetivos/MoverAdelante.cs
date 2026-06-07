@@ -1,7 +1,9 @@
 using UnityEngine;
+
 public class MoverAdelante : MonoBehaviour
 {
-    public float velocidad = 3f;
+    [HideInInspector] public float velocidad = 0f;
+
     void Update()
     {
         if (ShootingGalleryManager.instance != null && !ShootingGalleryManager.instance.juegoActivo) return;

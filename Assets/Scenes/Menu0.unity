@@ -654,6 +654,7 @@ GameObject:
   m_Component:
   - component: {fileID: 922519110}
   - component: {fileID: 922519109}
+  - component: {fileID: 922519111}
   m_Layer: 0
   m_Name: MenuManager
   m_TagString: Untagged
@@ -688,6 +689,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &922519111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 922519108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e59192d59299fef43a4cc023ca191b2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hayPartidaCargada: 0
+  datosARestaurar:
+    score: 0
+    balas: 0
+    dianasRestantes: 0
+    nivel: 0
 --- !u!1 &986069159
 GameObject:
   m_ObjectHideFlags: 0

@@ -45,14 +45,82 @@ public class ShootingGalleryManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name == "Nivel1") { nivelActual = 1; IniciarJuego(dianasNivel1, balasNivel1); }
-        else if (scene.name == "Nivel2") { nivelActual = 2; IniciarJuego(dianasNivel2, balasNivel2); }
+        if (scene.name == "Nivel1" || scene.name == "Nivel2")
+        {
+            if (SaveManager.Instancia != null && SaveManager.Instancia.hayPartidaCargada)
+            {
+                DatosPartida datos = SaveManager.Instancia.datosARestaurar;
+                nivelActual = datos.nivel;
+                score = datos.score;
+                balasRestantes = datos.balas;
+                dianasActivas = datos.dianasRestantes;
+                juegoActivo = true;
+                victoriaEjecutada = false;
+                coroutineGameOver = null;
+
+                SaveManager.Instancia.hayPartidaCargada = false;
+
+                // Omitir cinemática y reposicionar soldado
+                GameObject jugador = GameObject.Find("JugadorSoldado");
+                if (jugador != null)
+                {
+                    UnityEngine.Playables.PlayableDirector director =
+                        jugador.GetComponent<UnityEngine.Playables.PlayableDirector>();
+                    if (director != null) director.enabled = false;
+
+                    // Reposicionar en su posición de juego
+                    jugador.transform.position = new Vector3(
+                        jugador.transform.position.x,
+                        jugador.transform.position.y,
+                        -12.1f
+                    );
+                }
+
+                // Destruir dianas sobrantes esperando un frame
+                StartCoroutine(AjustarDianas(dianasActivas));
+
+                if (HUDManager.instance != null)
+                {
+                    HUDManager.instance.ActualizarBalas(balasRestantes);
+                    HUDManager.instance.ActualizarScore(score);
+                }
+            }
+            else
+            {
+                if (scene.name == "Nivel1") { nivelActual = 1; IniciarJuego(dianasNivel1, balasNivel1); }
+                else if (scene.name == "Nivel2") { nivelActual = 2; IniciarJuego(dianasNivel2, balasNivel2); }
+            }
+        }
+    }
+
+    IEnumerator AjustarDianas(int dianasAConservar)
+    {
+        yield return null;
+        yield return null;
+
+        // Buscar solo objetos raíz con tag Objetivo (no hijos)
+        GameObject[] todas = GameObject.FindGameObjectsWithTag("Objetivo");
+        System.Collections.Generic.List<GameObject> raices = new System.Collections.Generic.List<GameObject>();
+
+        foreach (GameObject d in todas)
+        {
+            if (d.transform.parent == null || !d.transform.parent.CompareTag("Objetivo"))
+                raices.Add(d);
+        }
+
+        Debug.Log("Dianas raíz encontradas: " + raices.Count + " | A conservar: " + dianasAConservar);
+
+        int sobrantes = raices.Count - dianasAConservar;
+        for (int i = 0; i < sobrantes; i++)
+        {
+            Destroy(raices[i]);
+        }
     }
 
     public void IniciarJuego(int cantidadDianas, int cantidadBalas)
     {
         balasRestantes = cantidadBalas;
-        score = 0;
+        if (nivelActual == 1) score = 0;
         dianasActivas = cantidadDianas;
         juegoActivo = true;
         coroutineGameOver = null;
@@ -83,9 +151,9 @@ public class ShootingGalleryManager : MonoBehaviour
             GameOver();
     }
 
-    public void DianaDestruida()
+    public void DianaDestruida(int puntaje = 0)
     {
-        score += puntajePorDiana;
+        score += puntaje;
         dianasActivas--;
         if (HUDManager.instance != null)
             HUDManager.instance.ActualizarScore(score);

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e51f534c8db3c34c8515479e002463c, type: 3}
+  m_Name: Diana Lenta
+  m_EditorClassIdentifier: 
+  nombreDiana: 
+  descripcion: "F\xE1cil de golpear"
+  puntaje: 100
+  velocidad: 1.5
+  vidas: 1
+  colorDiana: {r: 0, g: 0.09092474, b: 1, a: 0}
