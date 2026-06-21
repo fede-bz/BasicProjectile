@@ -1,9 +1,18 @@
 using UnityEngine;
-
 public class Proyectil : MonoBehaviour
 {
-    public float tiempoDeVida = 1f;
+    [Header("Movimiento")]
+    [Tooltip("Velocidad de avance del proyectil hacia adelante")]
+    [Range(1f, 30f)]
     public float velocidad = 10f;
+
+    [Header("Tiempo de Vida")]
+    [Tooltip("Segundos antes de autodestruirse si no impacta nada")]
+    [Range(0.5f, 10f)]
+    public float tiempoDeVida = 1f;
+
+    [Header("Efectos")]
+    [Tooltip("Partícula que se instancia al impactar contra algo")]
     [SerializeField] GameObject impactoPS;
 
     void Update()
@@ -18,7 +27,6 @@ public class Proyectil : MonoBehaviour
     {
         if (impactoPS != null)
             Instantiate(impactoPS, transform.position, Quaternion.identity);
-
         if (collision.gameObject.CompareTag("Objetivo"))
         {
             if (!ShootingGalleryManager.instance.juegoActivo) return;

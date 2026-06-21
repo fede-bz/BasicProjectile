@@ -1,12 +1,12 @@
 # Basic Projectile
 **Alumno:** Federico Bazán
-**Clases:** 5 (Game Logic) + 12 (Aesthetics Lvl 2: Animaciones y Movimiento) + 13 (Elementos básicos de la Interfaz de Usuario) + 16 (Aesthetics Lvl 3: Audio) + 21 (Aesthetics Lvl 4: Post-Processing y Efectos) + 22 (Save System y ScriptableObjects)
+**Clases:** 5 (Game Logic) + 12 (Aesthetics Lvl 2: Animaciones y Movimiento) + 13 (Elementos básicos de la Interfaz de Usuario) + 16 (Aesthetics Lvl 3: Audio) + 21 (Aesthetics Lvl 4: Post-Processing y Efectos) + 22 (Save System y ScriptableObjects) + 24 (Advanced Lvl 2: Herramientas para la visualización)
 
 ---
 
 ## Descripción
 
-Juego de disparos al blanco donde un soldado dispara a dianas móviles. El proyecto evolucionó desde sus mecánicas base de Clase 5 incorporando animaciones, un AnimatorController, una cinemática de intro con Timeline y mejoras visuales de iluminación y skybox. En la clase 13 le agregué patrón Singleton, un nivel extra, transiciones entre escenas, y elementos de UI. En la clase 16 se incorporó un sistema de audio completo. En la clase 21 se agregaron efectos visuales de post-procesado, Particle System y Trail Renderer. En la clase 22 se implementó un sistema de guardado y carga de datos con JSON y un Pause Menu, además de ScriptableObjects para los perfiles de diana.
+Juego de disparos al blanco donde un soldado dispara a dianas móviles. El proyecto evolucionó desde sus mecánicas base de Clase 5 incorporando animaciones, un AnimatorController, una cinemática de intro con Timeline y mejoras visuales de iluminación y skybox. En la clase 13 le agregué patrón Singleton, un nivel extra, transiciones entre escenas, y elementos de UI. En la clase 16 se incorporó un sistema de audio completo. En la clase 21 se agregaron efectos visuales de post-procesado, Particle System y Trail Renderer. En la clase 22 se implementó un sistema de guardado y carga de datos con JSON y un Pause Menu, además de ScriptableObjects para los perfiles de diana. En la clase 24 se incorporaron Gizmos para visualización en el Editor, mejoras de Inspector con Property Drawers, y se utilizó el Profiler para analizar el rendimiento del juego.
 
 ---
 
@@ -160,7 +160,37 @@ Perfil de datos para cada tipo de diana, creado como asset reutilizable en el pr
 - **Prefab:** `PanelPausa` — reutilizado en Nivel1 y Nivel2
 - **Botones:** Guardar, Cargar, Salir
 - Al cargar: omite la cinemática de intro, reposiciona al soldado y ajusta la cantidad de dianas en escena
+
 ---
+
+## Clase 24 — Advanced Lvl 2: Herramientas para la visualización
+
+### Gizmos
+
+**`Disparador.cs`**
+- `OnDrawGizmos()`: dibuja una esfera roja en `puntoDisparo`, visible siempre (seleccionado o no)
+- `OnDrawGizmosSelected()`: dibuja una línea amarilla desde `puntoDisparo` en la dirección `forward`, mostrando la trayectoria de disparo. Solo visible al seleccionar al soldado
+
+**`MoverAdelante.cs`**
+- `OnDrawGizmosSelected()`: dibuja una línea celeste de 2 unidades mostrando la dirección de movimiento (`transform.forward`).
+
+### Property Drawers
+
+**`Disparador.cs`**
+- `[Header]` separando "Referencias" (`prefabProyectil`, `puntoDisparo`) de "Configuración de Disparo" (`cooldownDisparo`)
+- `[Range(0.1f, 3f)]` en `cooldownDisparo`
+- `[Tooltip]` en las tres variables públicas
+
+**`Proyectil.cs`**
+- `[Header]` separando "Movimiento" (`velocidad`), "Tiempo de Vida" (`tiempoDeVida`) y "Efectos" (`impactoPS`)
+- `[Range(1f, 30f)]` en `velocidad`, `[Range(0.5f, 10f)]` en `tiempoDeVida`
+- `[Tooltip]` en las tres variables
+
+**`JugadorRotar.cs`** (extra)
+- `[Range(10f, 300f)]` y `[Tooltip]` en `velocidadRotacion`
+
+**`TemporizadorVida.cs`** (extra)
+- `[Range(1f, 20f)]` y `[Tooltip]` en `tiempoDeVida`
 
 ## Scripts
 
@@ -173,13 +203,13 @@ Perfil de datos para cada tipo de diana, creado como asset reutilizable en el pr
 | `HUDManager.cs` | UI | Textos y paneles de resultado |
 | `MainMenuManager.cs` | UI | Navegación del menú |
 | `PauseMenuManager.cs` | UI | Pause Menu con Escape, botones Guardar/Cargar/Salir |
-| `Disparador.cs` | Jugador | Instancia proyectiles con cooldown |
-| `JugadorRotar.cs` | Jugador | Rotación con A/D |
+| `Disparador.cs` | Jugador | Instancia proyectiles con cooldown, Gizmos de trayectoria, Property Drawers |
+| `JugadorRotar.cs` | Jugador | Rotación con A/D, Property Drawers |
 | `AnimacionDisparoSimple.cs` | Jugador | Trigger de animación de disparo |
 | `ObjetivoAnimado.cs` | Objetivos | Animación de impacto, destrucción y lectura de DianaData |
-| `MoverAdelante.cs` | Objetivos | Movimiento de dianas, velocidad seteada por DianaData |
-| `Proyectil.cs` | Herramientas | Movimiento, vida y colisión |
-| `TemporizadorVida.cs` | Herramientas | Vida que disminuye |
+| `MoverAdelante.cs` | Objetivos | Movimiento de dianas, velocidad seteada por DianaData, Gizmos de dirección |
+| `Proyectil.cs` | Herramientas | Movimiento, vida y colisión, Property Drawers |
+| `TemporizadorVida.cs` | Herramientas | Vida que disminuye, Property Drawers |
 | `TestMensajesUnity.cs` | Herramientas | Ciclo de vida de Unity |
 
 ---
